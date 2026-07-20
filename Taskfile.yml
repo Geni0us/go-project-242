@@ -11,7 +11,7 @@ tasks:
       - go build -o bin/hexlet-path-size.exe ./cmd/hexlet-path-size
 
   run:
-    cmd: go run cmd/hexlet-path-size/main.go
+    cmd: go run cmd/hexlet-path-size/main.go {{.CLI_ARGS}}
 
   run-bin:
     cmd: ./bin/hexlet-path-size {{.CLI_ARGS}}
