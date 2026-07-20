@@ -1,0 +1,21 @@
+# https://taskfile.dev
+
+version: '3'
+
+
+tasks:
+  build:
+    cmds:
+      - set GOOS=windows
+      - set GOARCH=386
+      - go build -o bin/hexlet-path-size.exe ./cmd/hexlet-path-size
+
+  run:
+    cmds:
+      - go run cmd/hexlet-path-size/main.go
+
+  run-bin:
+    cmd: ./bin/hexlet-path-size {{.CLI_ARGS}}
+
+  lint:
+    cmd: golangci-lint run {{.CLI_ARGS}}
