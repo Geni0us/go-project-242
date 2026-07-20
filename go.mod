@@ -1,3 +1,5 @@
-module github.com/Geni0us/go-project-242
+module code
 
 go 1.26.4
+
+require github.com/urfave/cli/v3 v3.10.1 // indirect
