@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	syspath "path"
 	"strconv"
 )
 
@@ -50,6 +51,7 @@ func GetPathSize(path string, _, human, _ bool) (string, error) {
 				if err != nil {
 					continue
 				}
+				eInf, err = os.Lstat(syspath.Join(path, eInf.Name()))
 				size += eInf.Size()
 			}
 		}
