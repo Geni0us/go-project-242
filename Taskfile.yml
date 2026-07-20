@@ -11,11 +11,13 @@ tasks:
       - go build -o bin/hexlet-path-size.exe ./cmd/hexlet-path-size
 
   run:
-    cmds:
-      - go run cmd/hexlet-path-size/main.go
+    cmd: go run cmd/hexlet-path-size/main.go
 
   run-bin:
     cmd: ./bin/hexlet-path-size {{.CLI_ARGS}}
 
   lint:
     cmd: golangci-lint run {{.CLI_ARGS}}
+
+  test:
+    cmd: go test -v
