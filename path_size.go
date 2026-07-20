@@ -2,11 +2,35 @@ package code
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 )
 
-func GetPathSize(path string, _, _, _ bool) (string, error) {
+func FormatSize(size int64, humanize bool) string {
+	resultSize := float64(size)
+	units := map[int]string{
+		0: "B",
+		1: "KB",
+		2: "MB",
+		3: "GB",
+		4: "TB",
+		5: "PB",
+		6: "EB",
+	}
+	unit := units[0]
+
+	if humanize {
+		var devider float64 = 1024
+
+		pow := math.Floor(math.Log(resultSize) / math.Log(devider))
+		unit = units[int(pow)]
+		resultSize = math.Round((resultSize/math.Pow(devider, pow))*10) / 10
+	}
+	return fmt.Sprintf("%s%s", strconv.FormatFloat(resultSize, 'f', -1, 64), unit)
+}
+
+func GetPathSize(path string, _, human, _ bool) (string, error) {
 
 	inf, err := os.Stat(path)
 	if err != nil {
@@ -33,5 +57,5 @@ func GetPathSize(path string, _, _, _ bool) (string, error) {
 		size = inf.Size()
 	}
 
-	return fmt.Sprintf("%sB\t%s", strconv.FormatInt(size, 10), path), nil
+	return fmt.Sprintf("%s\t%s", FormatSize(size, human), path), nil
 }
