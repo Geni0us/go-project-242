@@ -27,7 +27,12 @@ func FormatSize(size int64, humanize bool) string {
 		var devider float64 = 1024
 
 		pow := math.Floor(math.Log(resultSize) / math.Log(devider))
-		unit = units[int(pow)]
+		_unit, ok := units[int(pow)]
+		if !ok {
+			unit = "MoreThanYouCanImagineBytes"
+		} else {
+			unit = _unit
+		}
 		resultSize = math.Round((resultSize/math.Pow(devider, pow))*10) / 10
 	}
 	return fmt.Sprintf("%s%s", strconv.FormatFloat(resultSize, 'f', -1, 64), unit)
