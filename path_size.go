@@ -44,13 +44,17 @@ func scanDir(path string, all, recurcive bool) int64 {
 		return size
 	}
 	for _, entry := range files {
+		if all || !isHidden(entry.Name()) {
+			continue
+		}
+
 		if entry.IsDir() {
-			if recurcive && (all || !isHidden(entry.Name())) {
+			if recurcive {
 				size += scanDir(syspath.Join(path, entry.Name()), all, recurcive)
 			}
 		} else {
 			f, err := entry.Info()
-			if err == nil && all || !isHidden(entry.Name()) {
+			if err == nil {
 				size += f.Size()
 			}
 		}
