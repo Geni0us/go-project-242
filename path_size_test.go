@@ -33,10 +33,16 @@ func TestSizeHumanize(t *testing.T) {
 	var base float64 = 1024
 	require.Equal(t, FormatSize(10, true), "10B")
 	require.Equal(t, FormatSize(int64(base), true), "1KB")
-	require.Equal(t, FormatSize(int64(math.Pow(base, 2)), true), "1MB")
+	require.Equal(t, FormatSize(int64(base*base), true), "1MB")
 	require.Equal(t, FormatSize(1234567, true), "1.2MB")
-	require.Equal(t, FormatSize(int64(math.Pow(base, 3)), true), "1GB")
+	require.Equal(t, FormatSize(int64(base*base*base), true), "1GB")
 	require.Equal(t, FormatSize(int64(math.Pow(base, 4)), true), "1TB")
 	require.Equal(t, FormatSize(int64(math.Pow(base, 5)), true), "1PB")
 	require.Equal(t, FormatSize(int64(math.Pow(base, 6)), true), "1EB")
+}
+
+func TestHiddenCounting(t *testing.T) {
+	r1, _ := RawPathSize(".", false, true, true)
+	r2, _ := RawPathSize(".", false, true, false)
+	require.Equal(t, true, r1 >= r2)
 }
