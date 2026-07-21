@@ -11,8 +11,7 @@ import (
 )
 
 func main() {
-	var human bool
-	var all bool
+	var human, all, recurcive bool
 	cmd := &cli.Command{
 		Name:      "hexlet-path-size",
 		Usage:     "print size of a file or directory",
@@ -32,11 +31,18 @@ func main() {
 				Aliases:     []string{"a"},
 				Destination: &all,
 			},
+			&cli.BoolFlag{
+				Name:        "recursive",
+				Value:       false,
+				Usage:       "recursive size of directories",
+				Aliases:     []string{"r"},
+				Destination: &recurcive,
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 
 			for _, path := range cmd.Args().Slice() {
-				res, err := code.GetPathSize(path, false, human, all)
+				res, err := code.GetPathSize(path, recurcive, human, all)
 				if err == nil {
 					fmt.Println(res)
 				} else {
