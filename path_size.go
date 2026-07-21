@@ -5,7 +5,9 @@ import (
 	"math"
 	"os"
 	syspath "path"
+	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 func FormatSize(size int64, humanize bool) string {
@@ -31,32 +33,53 @@ func FormatSize(size int64, humanize bool) string {
 	return fmt.Sprintf("%s%s", strconv.FormatFloat(resultSize, 'f', -1, 64), unit)
 }
 
-func GetPathSize(path string, _, human, _ bool) (string, error) {
+func isHidden(filename string) bool {
+	return strings.HasPrefix(filename, ".")
+}
 
-	inf, err := os.Stat(path)
+func scanDir(path string, all, recurcive bool) int64 {
+	files, err := os.ReadDir(path)
+	var size int64
+	if err != nil {
+		return size
+	}
+	for _, entry := range files {
+		if entry.IsDir() {
+			if recurcive && (all || !isHidden(entry.Name())) {
+				size += scanDir(syspath.Join(path, entry.Name()), all, recurcive)
+			}
+		} else {
+			f, err := entry.Info()
+			if err == nil && all || !isHidden(entry.Name()) {
+				size += f.Size()
+			}
+		}
+	}
+	return size
+}
+
+func GetPathSize(path string, recurcive, human, all bool) (string, error) {
+
+	entry, err := os.Stat(path)
+
 	if err != nil {
 		return "", err
 	}
-	var size int64 = 0
-	if inf.IsDir() {
-		files, err := os.ReadDir(path)
-		if err != nil {
-			return "", err
-		}
-		for _, entry := range files {
-			if entry.IsDir() {
-				// TODO: recurcive walk
-			} else {
-				eInf, err := entry.Info()
-				if err != nil {
-					continue
-				}
-				eInf, err = os.Lstat(syspath.Join(path, eInf.Name()))
-				size += eInf.Size()
-			}
-		}
+
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return "", err
+	}
+
+	if !all && isHidden(filepath.Base(abs)) {
+		return "", fmt.Errorf("hidden file ignored")
+	}
+
+	var size int64
+	if entry.IsDir() {
+		size = scanDir(path, all, recurcive)
 	} else {
-		size = inf.Size()
+		size = entry.Size()
 	}
 
 	return fmt.Sprintf("%s\t%s", FormatSize(size, human), path), nil

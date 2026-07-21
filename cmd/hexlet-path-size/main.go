@@ -12,6 +12,7 @@ import (
 
 func main() {
 	var human bool
+	var all bool
 	cmd := &cli.Command{
 		Name:      "hexlet-path-size",
 		Usage:     "print size of a file or directory",
@@ -24,11 +25,18 @@ func main() {
 				Aliases:     []string{"H"},
 				Destination: &human,
 			},
+			&cli.BoolFlag{
+				Name:        "all",
+				Value:       false,
+				Usage:       "include hidden files and directories",
+				Aliases:     []string{"a"},
+				Destination: &all,
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 
 			for _, path := range cmd.Args().Slice() {
-				res, err := code.GetPathSize(path, false, human, false)
+				res, err := code.GetPathSize(path, false, human, all)
 				if err == nil {
 					fmt.Println(res)
 				} else {
