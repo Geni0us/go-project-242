@@ -20,4 +20,4 @@ tasks:
     cmd: golangci-lint run {{.CLI_ARGS}}
 
   test:
-    cmd: go test -v
+    cmd: go test -v {{.CLI_ARGS}}
