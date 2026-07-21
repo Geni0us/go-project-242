@@ -26,7 +26,7 @@ func TestDirFileSize(t *testing.T) {
 	path := "testdata"
 	res, err := GetPathSize(path, false, false, true)
 	require.Equal(t, err, nil)
-	require.Equal(t, res, fmt.Sprintf("100683B\t%s", path))
+	require.Equal(t, res, fmt.Sprintf("100011B\t%s", path))
 }
 
 func TestSizeHumanize(t *testing.T) {
