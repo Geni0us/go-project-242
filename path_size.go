@@ -44,7 +44,7 @@ func scanDir(path string, all, recurcive bool) int64 {
 		return size
 	}
 	for _, entry := range files {
-		if all || !isHidden(entry.Name()) {
+		if !all && isHidden(entry.Name()) {
 			continue
 		}
 
