@@ -58,28 +58,48 @@ func scanDir(path string, all, recurcive bool) int64 {
 	return size
 }
 
-func GetPathSize(path string, recurcive, human, all bool) (string, error) {
-
-	entry, err := os.Stat(path)
-
-	if err != nil {
-		return "", err
-	}
-
+func realname(path string) (string, error) {
 	abs, err := filepath.Abs(path)
 	if err != nil {
 		return "", err
 	}
+	return filepath.Base(abs), nil
+}
 
-	if !all && isHidden(filepath.Base(abs)) {
-		return "", fmt.Errorf("hidden file ignored")
+func ValidatePath(path string, all bool) (os.FileInfo, error) {
+	entry, err := os.Stat(path)
+	if err != nil {
+		return nil, err
 	}
 
-	var size int64
+	fileName, err := realname(path)
+	if err != nil {
+		return nil, err
+	}
+
+	if !all && isHidden(fileName) {
+		return nil, fmt.Errorf("hidden file ignored")
+	}
+
+	return entry, nil
+}
+
+func RawPathSize(path string, recurcive, human, all bool) (int64, error) {
+	entry, err := ValidatePath(path, all)
+	if err != nil {
+		return 0, err
+	}
+
 	if entry.IsDir() {
-		size = scanDir(path, all, recurcive)
-	} else {
-		size = entry.Size()
+		return scanDir(path, all, recurcive), nil
+	}
+	return entry.Size(), nil
+}
+
+func GetPathSize(path string, recurcive, human, all bool) (string, error) {
+	size, err := RawPathSize(path, recurcive, human, all)
+	if err != nil {
+		return "", err
 	}
 
 	return fmt.Sprintf("%s\t%s", FormatSize(size, human), path), nil
