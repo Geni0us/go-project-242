@@ -84,7 +84,7 @@ func ValidatePath(path string, all bool) (os.FileInfo, error) {
 	return entry, nil
 }
 
-func RawPathSize(path string, recurcive, human, all bool) (int64, error) {
+func RawPathSize(path string, recurcive, all bool) (int64, error) {
 	entry, err := ValidatePath(path, all)
 	if err != nil {
 		return 0, err
@@ -97,7 +97,7 @@ func RawPathSize(path string, recurcive, human, all bool) (int64, error) {
 }
 
 func GetPathSize(path string, recurcive, human, all bool) (string, error) {
-	size, err := RawPathSize(path, recurcive, human, all)
+	size, err := RawPathSize(path, recurcive, all)
 	if err != nil {
 		return "", err
 	}

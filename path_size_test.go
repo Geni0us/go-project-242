@@ -42,7 +42,7 @@ func TestSizeHumanize(t *testing.T) {
 }
 
 func TestHiddenCounting(t *testing.T) {
-	r1, _ := RawPathSize(".", false, true, true)
-	r2, _ := RawPathSize(".", false, true, false)
+	r1, _ := RawPathSize(".", false, false)
+	r2, _ := RawPathSize(".", false, false)
 	require.Equal(t, true, r1 >= r2)
 }
