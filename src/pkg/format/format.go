@@ -5,17 +5,18 @@ import (
 	"math"
 )
 
+var units = map[int]string{
+	0: "B",
+	1: "KB",
+	2: "MB",
+	3: "GB",
+	4: "TB",
+	5: "PB",
+	6: "EB",
+}
+
 func FormatSize(size int64, humanize bool) string {
 	resultSize := float64(size)
-	units := map[int]string{
-		0: "B",
-		1: "KB",
-		2: "MB",
-		3: "GB",
-		4: "TB",
-		5: "PB",
-		6: "EB",
-	}
 	unit := units[0]
 
 	if humanize {
