@@ -6,7 +6,6 @@ import (
 	"os"
 	syspath "path"
 	"path/filepath"
-	"strconv"
 	"strings"
 )
 
@@ -35,7 +34,10 @@ func FormatSize(size int64, humanize bool) string {
 		}
 		resultSize = math.Round((resultSize/math.Pow(devider, pow))*10) / 10
 	}
-	return fmt.Sprintf("%s%s", strconv.FormatFloat(resultSize, 'f', -1, 64), unit)
+	if unit == units[0] {
+		return fmt.Sprintf("%d%s", int64(resultSize), unit)
+	}
+	return fmt.Sprintf("%.1f%s", resultSize, unit)
 }
 
 func isHidden(filename string) bool {
