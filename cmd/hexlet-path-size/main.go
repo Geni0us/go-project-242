@@ -44,7 +44,7 @@ func main() {
 			for _, path := range cmd.Args().Slice() {
 				res, err := code.GetPathSize(path, recurcive, human, all)
 				if err == nil {
-					fmt.Println(res)
+					fmt.Printf("%s\t%s", res, path)
 				} else {
 					log.Fatal(err)
 				}

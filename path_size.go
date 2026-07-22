@@ -113,5 +113,5 @@ func GetPathSize(path string, recurcive, human, all bool) (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s\t%s", FormatSize(size, human), path), nil
+	return FormatSize(size, human), nil
 }
