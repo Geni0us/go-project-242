@@ -7,7 +7,7 @@ import (
 )
 
 func RawPathSize(path string, recurcive, all bool) (int64, error) {
-	entry, err := internalPath.ValidatePath(path, all)
+	entry, err := internalPath.GetEntry(path, all)
 	if err != nil {
 		return 0, err
 	}

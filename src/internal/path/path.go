@@ -11,7 +11,7 @@ func Excluded(entryName string, all bool) bool {
 	return !all && strings.HasPrefix(entryName, ".")
 }
 
-func ValidatePath(path string, all bool) (os.FileInfo, error) {
+func GetEntry(path string, all bool) (os.FileInfo, error) {
 	entry, err := os.Stat(path)
 	if err != nil {
 		return nil, err
