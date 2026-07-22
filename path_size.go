@@ -40,24 +40,24 @@ func FormatSize(size int64, humanize bool) string {
 	return fmt.Sprintf("%.1f%s", resultSize, unit)
 }
 
-func isHidden(filename string) bool {
-	return strings.HasPrefix(filename, ".")
+func excluded(entryName string, all bool) bool {
+	return !all && strings.HasPrefix(entryName, ".")
 }
 
-func scanDir(path string, all, recurcive bool) int64 {
+func dirSize(path string, all, recurcive bool) int64 {
 	files, err := os.ReadDir(path)
 	var size int64
 	if err != nil {
 		return size
 	}
 	for _, entry := range files {
-		if !all && isHidden(entry.Name()) {
+		if excluded(entry.Name(), all) {
 			continue
 		}
 
 		if entry.IsDir() {
 			if recurcive {
-				size += scanDir(syspath.Join(path, entry.Name()), all, recurcive)
+				size += dirSize(syspath.Join(path, entry.Name()), all, recurcive)
 			}
 		} else {
 			f, err := entry.Info()
@@ -88,7 +88,7 @@ func ValidatePath(path string, all bool) (os.FileInfo, error) {
 		return nil, err
 	}
 
-	if !all && isHidden(fileName) {
+	if excluded(fileName, all) {
 		return nil, fmt.Errorf("hidden file ignored")
 	}
 
@@ -102,7 +102,7 @@ func RawPathSize(path string, recurcive, all bool) (int64, error) {
 	}
 
 	if entry.IsDir() {
-		return scanDir(path, all, recurcive), nil
+		return dirSize(path, all, recurcive), nil
 	}
 	return entry.Size(), nil
 }
