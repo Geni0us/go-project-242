@@ -46,9 +46,10 @@ func TestEmptyDirFileSize(t *testing.T) {
 }
 
 func TestHiddenCounting(t *testing.T) {
-	r1, _ := rawPathSize(".", false, false)
-	r2, _ := rawPathSize(".", false, false)
-	require.Equal(t, true, r1 >= r2)
+	r1, _ := rawPathSize(".", true, true)
+	r2, _ := rawPathSize(".", true, false)
+
+	require.Equal(t, true, r1 > r2)
 }
 
 func TestRecursiveWalk(t *testing.T) {
