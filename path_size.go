@@ -42,12 +42,21 @@ func getEntry(path string, all bool) (os.FileInfo, error) {
 func dirSize(_path string, all, recurcive bool) (int64, error) {
 	var size int64
 	err := filepath.Walk(_path, func(path string, info fs.FileInfo, err error) error {
-		if excluded(info.Name(), all) || err != nil || path == _path {
+	
+		_excluded := excluded(info.Name(), all)
+		if err != nil || path == _path {
+			return err
+		}
+		if info.IsDir() {
+			if _excluded || !recurcive {
+				return filepath.SkipDir
+			}
 			return nil
 		}
-		if info.IsDir() && !recurcive {
-			return filepath.SkipDir
+		if _excluded {
+			return nil
 		}
+
 		size += info.Size()
 		return nil
 	})
